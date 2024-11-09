@@ -14,7 +14,7 @@ const Summary: React.FC = () => {
     takerBuyQuoteVolume: number;
   }
 
-  const { data: stockData = [], isFetching } = useStockData("1d");
+  const { data: stockData = [], isFetching, isLoading } = useStockData("1d");
   // Extract the latest data
   const currentPrice = stockData[stockData.length - 1]?.close;
   const price24hHigh = Math.max(
@@ -25,23 +25,42 @@ const Summary: React.FC = () => {
   );
 
   const priceChange =
-    ((currentPrice - stockData[0].close) / stockData[0].close) * 100;
-
+    ((currentPrice - stockData[0]?.close) / stockData[0]?.close) * 100;
+  if (isLoading) return <div>Loading....</div>;
+  const formatPrice = (price: number) => {
+    return price.toLocaleString("en-US", {
+      style: "decimal",
+      maximumFractionDigits: 2,
+      minimumFractionDigits: 2,
+    });
+  };
   return (
-    <div className="summary-container">
-      <div className="price">
-        <h3>Current Price</h3>
-        <p>${currentPrice}</p>
+    <div className="flex flex-row justify-between px-16">
+      <div className=" flex flex-col text-center pt-8 w-[350px] h-[200px] rounded-md shadow-md ">
+        <div className="text-3xl text-gray-400 font-semibold">
+          Current Price
+        </div>
+        <div className="text-3xl text-gray-600 mt-6 font-semibold">
+          {formatPrice(currentPrice)}
+        </div>
       </div>
-      <div className="price-change">
-        <h3>1 Year Change</h3>
-        <p>{priceChange.toFixed(2)}%</p>
+      <div className=" flex flex-col text-center pt-8 w-[350px] h-[200px] rounded-md shadow-md relative ">
+        <div className="flex flex-col justify-center  h-[32px] w-[32px] rounded-full bg-[#4B40EE]  text-gray-50 absolute top-1 right-1 font-semibold">
+          1y
+        </div>
+        <div className="text-3xl text-gray-400 font-semibold">Change</div>
+        <div className="text-3xl text-gray-600 mt-6 font-semibold">
+          {priceChange.toFixed(2)}%
+        </div>
       </div>
-      <div className="high-low">
-        <h3>1 Year High/Low</h3>
-        <p>
-          {price24hHigh} / {price24hLow}
-        </p>
+      <div className=" flex flex-col text-center pt-8 w-[350px] h-[200px] rounded-md shadow-md relative">
+        <div className="flex flex-col justify-center  h-[32px] w-[32px] rounded-full bg-[#4B40EE]  text-gray-50 absolute top-1 right-1 font-semibold ">
+          1y
+        </div>
+        <div className="text-3xl text-gray-400 font-semibold">High/Low</div>
+        <div className="text-3xl text-gray-600 mt-6 font-semibold">
+          {formatPrice(price24hHigh)} / {formatPrice(price24hLow)}
+        </div>
       </div>
     </div>
   );

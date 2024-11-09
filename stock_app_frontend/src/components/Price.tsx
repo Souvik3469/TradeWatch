@@ -27,8 +27,8 @@ const Price: React.FC = () => {
     <div>
       <section className="mb-6">
         <div>
-          <div className="flex flex-row">
-            <div className="font-circular text-70px font-normal leading-88px text-left text-[#1A243A]">
+          <div className="flex flex-row relative">
+            <div className=" text-70px font-normal leading-88px text-left text-[#1A243A] ">
               {/* {isFetching ? (
                 <span className="text-gray-500">Loading...</span> // Optional placeholder during fetching
               ) : (
@@ -36,7 +36,7 @@ const Price: React.FC = () => {
               )} */}
               {formatPrice(price)}
             </div>
-            <div className="py-3 px-1 font-circular text-24px font-normal text-[#BDBEBF]">
+            <div className="absolute top-3 left-[310px]  text-24px font-normal text-[#BDBEBF]">
               USD
             </div>
           </div>

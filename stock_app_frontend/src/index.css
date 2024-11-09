@@ -4,6 +4,7 @@
 
 @font-face {
     font-family: 'Circular Std';
-    src: url('/path/to/fonts/CircularStd.woff2') format('woff2'),
-        url('/path/to/fonts/CircularStd.woff') format('woff');
+    src: url('/CircularStd-Book.woff2') format('woff2'),
+        url('/CircularStd-Book.woff') format('woff');
+
 }

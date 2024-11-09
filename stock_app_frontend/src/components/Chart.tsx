@@ -7,7 +7,7 @@ import { useStockData } from "../hooks/useStockData";
 const Chart: React.FC = () => {
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
-  const [selectedTimeframe, setSelectedTimeframe] = useState<string>("1w");
+  const [selectedTimeframe, setSelectedTimeframe] = useState<string>("1d");
 
   const { data: stockData = [], isFetching } = useStockData(selectedTimeframe);
   interface StockDataPoint {
@@ -89,7 +89,7 @@ const Chart: React.FC = () => {
           </div>
         </div>
         <div className="flex space-x-4">
-          {["1d", "3d", "1w", "1m", "6m", "1y", "max"].map((timeframe) => (
+          {["1m", "5m", "1h", "1d", "1w", "1M", "max"].map((timeframe) => (
             <button
               key={timeframe}
               className={`text-[#6F7177] py-1 px-2 rounded-md text-[18px] leading-[22.77px] font-normal hover:text-[#ffffff] hover:bg-[#4B40EE] cursor-pointer ${

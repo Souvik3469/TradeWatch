@@ -3,13 +3,13 @@ import axios from "axios";
 
 
 const timeframeMapping: { [key: string]: string } = {
+  "1m": "1m",
+  "5m": "5m",
+  "1h": "1h",
   "1d": "1d",
-  "3d": "3d",
   "1w": "1w",
-  "1m": "1M",
-  "6m": "6M",
-  "1y": "1y",
-  "max": "1y",
+  "1M": "1M",
+  "max": "1M",
 };
 
 
@@ -44,8 +44,8 @@ return response.data.map((res: any) => ({
 
 export const useStockData = (timeframe: string) => {
   return useQuery({
-    queryKey: ["bitcoinData", timeframe],
+    queryKey: ["stockData", timeframe],
     queryFn: () => fetchStockData(timeframe),
-    refetchInterval:30 * 1000, 
+    refetchInterval:3* 1000, 
   });
 };

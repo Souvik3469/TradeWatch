@@ -7,7 +7,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        circular: ["'Circular Std'", "sans-serif"], // Add custom font
+        sans: ["Circular Std", "sans-serif"], // Add custom font
       },
       fontSize: {
         '70px': '70px', 
