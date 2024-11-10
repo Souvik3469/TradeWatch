@@ -5,12 +5,12 @@ const Price: React.FC = () => {
   const [price, setPrice] = useState<number>(63179.71);
   // const [percentageChange, setPercentageChange] = useState<number>(3.54);
 
-  const { data: stockData = [], isFetching, isLoading } = useStockData("1w");
+  const { data: stockData = [], isLoading } = useStockData("1w");
 
   useEffect(() => {
     if (stockData.length > 0) {
       const latestPrice = stockData[stockData.length - 1].close;
-      const firstPrice = stockData[0].close;
+      // const firstPrice = stockData[0].close;
 
       setPrice(latestPrice);
       // setPercentageChange(((latestPrice - firstPrice) / firstPrice) * 100);

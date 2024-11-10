@@ -1,6 +1,3 @@
-import React from "react";
-import { Link } from "react-router-dom";
-
 const Settings = () => {
   return (
     <div className="flex flex-col justify-center items-center p-8">

@@ -23,7 +23,7 @@ interface StockDataPoint {
 }
 
 const Analysis: React.FC = () => {
-  const { data: stockData = [], isFetching, isLoading } = useStockData("1d");
+  const { data: stockData = [], isLoading } = useStockData("1d");
 
   const calculateRSI = (data: number[], period: number = 14) => {
     let gains = 0;

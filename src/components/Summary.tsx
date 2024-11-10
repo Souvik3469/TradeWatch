@@ -15,7 +15,7 @@ const Summary: React.FC = () => {
     takerBuyQuoteVolume: number;
   }
 
-  const { data: stockData = [], isFetching, isLoading } = useStockData("1d");
+  const { data: stockData = [], isLoading } = useStockData("1d");
 
   const currentPrice = stockData[stockData.length - 1]?.close;
   const price24hHigh = Math.max(

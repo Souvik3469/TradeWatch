@@ -12,11 +12,7 @@ const Chart: React.FC = () => {
   const [selectedTimeframe, setSelectedTimeframe] = useState<string>("1d");
   const fullScreenHandle = useFullScreenHandle();
 
-  const {
-    data: stockData = [],
-    isFetching,
-    isLoading,
-  } = useStockData(selectedTimeframe);
+  const { data: stockData = [], isLoading } = useStockData(selectedTimeframe);
   interface StockDataPoint {
     time: number;
     open: number;
