@@ -1,50 +1,45 @@
-# React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# TradeWatch 📈
 
-Currently, two official plugins are available:
+Welcome to TradeWatch, a platform/dashboard for live stock chart updates, technical analysis tools, and insightful visualizations. Designed for both novice and experienced investors, TradeWatch offers essential features for tracking market trends, analyzing trade volume, exploring key indicators, and understanding market sentiment.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Authors
 
-## Expanding the ESLint configuration
+- [@Souvik3469](https://github.com/Souvik3469)(Souvik Sen)
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Prototype Demo 
+https://trade-watch.vercel.app/
 
-- Configure the top-level `parserOptions` property like this:
+## Tech Stack
+- FrontEnd: ReactJs, Vite, Tailwind Css, Typescript, React-query
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+## Features
+
+### Summary: 
+![Summary](https://github.com/Souvik3469/TradeWatch/blob/main/public/Summary.png)
+- Realtime data regarding Stock's current price and day high/low. (High/low are shown for a 5 year period due to API response).
+
+### Chart: 
+![Chart](https://github.com/Souvik3469/TradeWatch/blob/main/public/Chart.png)
+- Realtime chart updates which can be filtered as per the timeframe.
+  
+![FullScreen](https://github.com/Souvik3469/TradeWatch/blob/main/public/Chart_fullscreen.png)
+- Chart can also be viewed in full screen.
+
+### Statistics: 
+![Statistics](https://github.com/Souvik3469/TradeWatch/blob/main/public/Statistics.png)
+- TradeBook of live trades. (For now its dummy data)
+
+### Analysis: 
+![Analysis](https://github.com/Souvik3469/TradeWatch/blob/main/public/Analysis.png)
+- Realtime data for analysis of the particular stock like 50 EMA, 200 EMA, RSI, Volume, Avg Price and No. of Trades.
+- Graphical representation of institutional holdings and market sentiments. (Dummy data)
+
+
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)
+
