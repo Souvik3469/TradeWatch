@@ -1,44 +1,50 @@
+import React from "react";
 import { useStockData } from "../hooks/useStockData";
-
-// RSI Calculation (simple version)
-const calculateRSI = (data: number[], period: number = 14) => {
-  let gains = 0;
-  let losses = 0;
-
-  for (let i = 1; i <= period; i++) {
-    const change = data[i] - data[i - 1];
-    if (change > 0) gains += change;
-    else losses -= change;
-  }
-
-  const avgGain = gains / period;
-  const avgLoss = losses / period;
-  const rs = avgGain / avgLoss;
-
-  return 100 - 100 / (1 + rs);
-};
+import {
+  Tooltip,
+  ResponsiveContainer,
+  Legend,
+  PieChart,
+  Pie,
+  Cell,
+} from "recharts";
+import Loader from "./Loader";
+interface StockDataPoint {
+  time: number;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  volume: number;
+  quoteVolume: number;
+  numTrades: number;
+  takerBuyBaseVolume: number;
+  takerBuyQuoteVolume: number;
+}
 
 const Analysis: React.FC = () => {
-  interface StockDataPoint {
-    time: number; // Timestamp in seconds
-    open: number;
-    high: number;
-    low: number;
-    close: number;
-    volume: number;
-    quoteVolume: number;
-    numTrades: number;
-    takerBuyBaseVolume: number;
-    takerBuyQuoteVolume: number;
-  }
+  const { data: stockData = [], isFetching, isLoading } = useStockData("1d");
 
-  const { data: stockData = [], isFetching } = useStockData("1d");
+  const calculateRSI = (data: number[], period: number = 14) => {
+    let gains = 0;
+    let losses = 0;
 
-  // Calculate RSI (Relative Strength Index) for the last 14 periods
+    for (let i = 1; i <= period; i++) {
+      const change = data[i] - data[i - 1];
+      if (change > 0) gains += change;
+      else losses -= change;
+    }
+
+    const avgGain = gains / period;
+    const avgLoss = losses / period;
+    const rs = avgGain / avgLoss;
+
+    return 100 - 100 / (1 + rs);
+  };
+
   const closePrices = stockData.map((item: StockDataPoint) => item.close);
   const rsi = calculateRSI(closePrices, 14);
 
-  // Calculate 50-period and 200-period moving averages
   const movingAvg50 =
     closePrices.slice(0, 50).reduce((acc: any, curr: any) => acc + curr, 0) /
     50;
@@ -46,46 +52,6 @@ const Analysis: React.FC = () => {
     closePrices.slice(0, 200).reduce((acc: any, curr: any) => acc + curr, 0) /
     200;
 
-  return (
-    <div className="analysis-container">
-      <div className="rsi">
-        <h3>RSI (14)</h3>
-        <p>{rsi.toFixed(2)}</p>
-      </div>
-      <div className="moving-avg">
-        <h3>50-Period Moving Average</h3>
-        <p>${movingAvg50.toFixed(2)}</p>
-      </div>
-      <div className="moving-avg-200">
-        <h3>200-Period Moving Average</h3>
-        <p>${movingAvg200.toFixed(2)}</p>
-      </div>
-    </div>
-  );
-};
-
-export default Analysis;
-
-/*
-import { useStockData } from "../hooks/useStockData";
-
-const Statistics: React.FC = () => {
-  interface StockDataPoint {
-    time: number; // Timestamp in seconds
-    open: number;
-    high: number;
-    low: number;
-    close: number;
-    volume: number;
-    quoteVolume: number;
-    numTrades: number;
-    takerBuyBaseVolume: number;
-    takerBuyQuoteVolume: number;
-  }
-
-  const { data: stockData = [], isFetching } = useStockData("1d");
-
-  // Calculate 24h Volume and Average Price
   const totalVolume = stockData.reduce(
     (acc: any, curr: any) => acc + curr.volume,
     0
@@ -94,45 +60,149 @@ const Statistics: React.FC = () => {
     stockData.reduce((acc: any, curr: any) => acc + curr.close, 0) /
     stockData.length;
 
-  // Total Number of Trades
   const totalTrades = stockData.reduce(
     (acc: any, curr: any) => acc + curr.numTrades,
     0
   );
+  const holdingsData = [
+    { name: "Retail Investors", value: 35 },
+    { name: "Institutional Investors", value: 45 },
+    { name: "Crypto Funds", value: 10 },
+    { name: "Governments", value: 5 },
+    { name: "Exchanges", value: 5 },
+  ];
+  const sentimentData = [
+    { name: "Bullish", value: 50 },
+    { name: "Neutral", value: 30 },
+    { name: "Bearish", value: 20 },
+  ];
 
+  const HOLDINGS_COLORS = [
+    "#FFBB28", // Retail Investors
+    "#FF8042", // Institutional Investors
+    "#00C49F", // Crypto Funds
+    "#4B40EE", // Governments
+    "#8884d8", // Exchanges
+  ];
+  const SENTIMENT_COLORS = ["#04cf48", "#e8a70e", "#c91a0a"];
+  if (isLoading) {
+    return (
+      <div className="flex flex-row justify-center m-4">
+        <Loader />
+      </div>
+    );
+  }
   return (
-    <div className="statistics-container">
-      <div className="volume">
-        <h3>24h Volume</h3>
-        <p>{totalVolume.toLocaleString()}</p>
-      </div>
-      <div className="average-price">
-        <h3>24h Average Price</h3>
-        <p>${averagePrice.toFixed(2)}</p>
-      </div>
-      <div className="trade-count">
-        <h3>Total Trades (24h)</h3>
-        <p>{totalTrades.toLocaleString()}</p>
-      </div>
-      <div className="flex flex-col w-full ">
-        <div className=" flex flex-row justify-between px-[100px] text-center pt-8 w-[screen] h-[screen] rounded-md shadow-md  mx-[150px]">
-          <div className="text-lg text-gray-500 font-normal">Current Price</div>
-          <div className="text-4xl text-gray-600 mt-6 font-semibold">87896</div>
-        </div>
-        <div className=" flex flex-col text-center pt-8 w-[350px] h-[200px] rounded-md shadow-md relative ">
-          <div className="flex flex-col justify-center  h-[32px] w-[32px] rounded-full bg-[#4B40EE]  text-gray-50 absolute top-1 right-1 font-semibold">
-            1y
+    <div>
+      <div className=" px-8 pb-4 ">
+        <div className="flex flex-row justify-between flex-wrap ">
+          <div className=" w-[380px] h-fit rounded-lg shadow-md">
+            <div className="px-6 py-6 flex flex-col justify-center ">
+              <div className="flex flex-row justify-between pt-4 border-b-2 border-gray-200">
+                <div className="text-gray-400">RSI (14)</div>
+                <div className="text-2xl text-gray-800 ">{rsi.toFixed(2)}</div>
+              </div>
+              <div className="flex flex-row justify-between pt-4 border-b-2 border-gray-200">
+                <div className="text-gray-400">50 EMA</div>
+                <div className="text-2xl text-gray-800">
+                  {movingAvg50.toFixed(2)}
+                </div>
+              </div>
+              <div className="flex flex-row justify-between pt-4 border-b-2 border-gray-200">
+                <div className="text-gray-400">200 EMA</div>
+                <div className="text-2xl text-gray-800">
+                  {movingAvg200.toFixed(2)}
+                </div>
+              </div>
+              <div className="flex flex-row justify-between pt-4 border-b-2 border-gray-200">
+                <div className="text-gray-400"> Volume</div>
+                <div className="text-2xl text-gray-800">
+                  {totalVolume.toLocaleString()}
+                </div>
+              </div>
+              <div className="flex flex-row justify-between pt-4 border-b-2 border-gray-200">
+                <div className="text-gray-400">Average Price</div>
+                <div className="text-2xl text-gray-800">
+                  {averagePrice.toFixed(2)}
+                </div>
+              </div>
+              <div className="flex flex-row justify-between pt-4 border-b-2 border-gray-200">
+                <div className="text-gray-400">Total Trades</div>
+                <div className="text-2xl text-gray-800">
+                  {totalTrades.toLocaleString()}
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="text-lg text-gray-500 font-normal">Change</div>
-          <div className="text-3xl text-gray-600 mt-6 font-semibold">78%</div>
-        </div>
-        <div className=" flex flex-col text-center pt-8 w-[350px] h-[200px] rounded-md shadow-md relative">
-          <div className="flex flex-col justify-center  h-[32px] w-[32px] rounded-full bg-[#4B40EE]  text-gray-50 absolute top-1 right-1 font-semibold ">
-            1y
+          <div className=" w-[380px] h-[430px] rounded-lg shadow-lg">
+            <div className="flex flex-col align-middle ">
+              <div className="flex flex-row justify-center my-3">
+                Holdings Distribution
+              </div>
+              <div className=" flex flex-row  pl-[40px] h-[350px] w-[350px]">
+                <ResponsiveContainer>
+                  <PieChart>
+                    <Pie
+                      data={holdingsData}
+                      dataKey="value"
+                      nameKey="name"
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={60}
+                      outerRadius={100}
+                      fill="#FFBB28"
+                      paddingAngle={3}
+                      label
+                    >
+                      {holdingsData.map((_, index) => (
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={HOLDINGS_COLORS[index % HOLDINGS_COLORS.length]}
+                        />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                    <Legend />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
           </div>
-          <div className="text-lg text-gray-500 font-normal">High/Low</div>
-          <div className="text-3xl text-gray-600 mt-6 font-semibold">
-            151684
+          <div className=" w-[380px] h-[430px] rounded-lg shadow-lg">
+            <div className="flex flex-col align-middle ">
+              <div className="flex flex-row justify-center mt-3 ">
+                Market Sentiment
+              </div>
+              <div className=" flex flex-row  pl-[40px] h-[350px] w-[350px] mt-[-15px]">
+                <ResponsiveContainer>
+                  <PieChart>
+                    <Pie
+                      data={sentimentData}
+                      dataKey="value"
+                      nameKey="name"
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={60}
+                      outerRadius={100}
+                      fill="#4B40EE"
+                      paddingAngle={3}
+                      label
+                    >
+                      {sentimentData.map((_, index) => (
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={
+                            SENTIMENT_COLORS[index % SENTIMENT_COLORS.length]
+                          }
+                        />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                    <Legend />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -140,6 +210,4 @@ const Statistics: React.FC = () => {
   );
 };
 
-export default Statistics;
-
-*/
+export default Analysis;

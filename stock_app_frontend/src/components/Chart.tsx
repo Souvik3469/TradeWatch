@@ -1,17 +1,24 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import { createChart, IChartApi } from "lightweight-charts";
 import { MdOpenInFull } from "react-icons/md";
 import { LuPlusCircle } from "react-icons/lu";
+import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import { useStockData } from "../hooks/useStockData";
+import Loader from "./Loader";
 
 const Chart: React.FC = () => {
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
   const [selectedTimeframe, setSelectedTimeframe] = useState<string>("1d");
+  const fullScreenHandle = useFullScreenHandle();
 
-  const { data: stockData = [], isFetching } = useStockData(selectedTimeframe);
+  const {
+    data: stockData = [],
+    isFetching,
+    isLoading,
+  } = useStockData(selectedTimeframe);
   interface StockDataPoint {
-    time: number; // Timestamp in seconds
+    time: number;
     open: number;
     high: number;
     low: number;
@@ -23,12 +30,20 @@ const Chart: React.FC = () => {
     takerBuyQuoteVolume: number;
   }
 
+  const resizeChart = useCallback(() => {
+    if (chartRef.current && chartContainerRef.current) {
+      chartRef.current.applyOptions({
+        width: chartContainerRef.current.clientWidth,
+        height: chartContainerRef.current.clientHeight,
+      });
+    }
+  }, []);
+
   useEffect(() => {
     if (chartContainerRef.current && !chartRef.current) {
-      // Create chart only once
       chartRef.current = createChart(chartContainerRef.current, {
-        width: 1250,
-        height: 400,
+        width: chartContainerRef.current.clientWidth,
+        height: chartContainerRef.current.clientHeight,
         grid: {
           vertLines: { color: "#ffffff", style: 1 },
           horzLines: { color: "#ffffff", style: 1 },
@@ -48,34 +63,51 @@ const Chart: React.FC = () => {
       });
 
       if (stockData.length > 0) {
-        // Map stock data to the format expected by the area series
         const mappedData = stockData.map((dataPoint: StockDataPoint) => ({
-          time: dataPoint.time, // Timestamp in seconds
-          value: dataPoint.close, // Closing price (value)
+          time: dataPoint.time,
+          value: dataPoint.close,
         }));
 
-        // Set data for the area series
         areaSeries.setData(mappedData);
       }
     }
 
+    window.addEventListener("resize", resizeChart);
     return () => {
+      window.removeEventListener("resize", resizeChart);
       if (chartRef.current) {
         chartRef.current.remove();
         chartRef.current = null;
       }
     };
-  }, [stockData, selectedTimeframe]);
+  }, [stockData, selectedTimeframe, resizeChart]);
+
+  useEffect(() => {
+    if (fullScreenHandle.active) {
+      resizeChart();
+    }
+  }, [fullScreenHandle.active, resizeChart]);
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-row justify-center m-4">
+        <Loader />
+      </div>
+    );
+  }
 
   return (
     <div className="w-[90%] p-4 bg-white">
       <div className="flex justify-between items-center mb-4">
         <div className="flex space-x-8">
-          <div className="flex flex-row justify-center">
+          <div
+            className="flex flex-row justify-center cursor-pointer"
+            onClick={fullScreenHandle.enter}
+          >
             <div className="px-2 text-[#6F7177] text-[20px]">
               <MdOpenInFull />
             </div>
-            <div className="text-[#6F7177] text-[18px] leading-[22.77px] font-normal hover:text-[#1A243A] cursor-pointer">
+            <div className="text-[#6F7177] text-[18px] leading-[22.77px] font-normal hover:text-[#1A243A]">
               Fullscreen
             </div>
           </div>
@@ -105,7 +137,13 @@ const Chart: React.FC = () => {
         </div>
       </div>
 
-      <div ref={chartContainerRef} className="overflow-hidden"></div>
+      <FullScreen handle={fullScreenHandle}>
+        <div
+          ref={chartContainerRef}
+          className="overflow-hidden w-full h-full"
+          style={{ minHeight: "400px" }}
+        ></div>
+      </FullScreen>
 
       {/* {isFetching && (
         <div className="text-right text-gray-400 text-xs">

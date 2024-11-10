@@ -1,8 +1,9 @@
 import { useStockData } from "../hooks/useStockData";
+import Loader from "./Loader";
 
 const Summary: React.FC = () => {
   interface StockDataPoint {
-    time: number; // Timestamp in seconds
+    time: number;
     open: number;
     high: number;
     low: number;
@@ -15,7 +16,7 @@ const Summary: React.FC = () => {
   }
 
   const { data: stockData = [], isFetching, isLoading } = useStockData("1d");
-  // Extract the latest data
+
   const currentPrice = stockData[stockData.length - 1]?.close;
   const price24hHigh = Math.max(
     ...stockData.map((item: StockDataPoint) => item.high)
@@ -26,7 +27,7 @@ const Summary: React.FC = () => {
 
   const priceChange =
     ((currentPrice - stockData[0]?.close) / stockData[0]?.close) * 100;
-  if (isLoading) return <div>Loading....</div>;
+
   const formatPrice = (price: number) => {
     return price.toLocaleString("en-US", {
       style: "decimal",
@@ -34,6 +35,13 @@ const Summary: React.FC = () => {
       minimumFractionDigits: 2,
     });
   };
+  if (isLoading) {
+    return (
+      <div className="flex flex-row justify-center m-4">
+        <Loader />
+      </div>
+    );
+  }
   return (
     <div className="flex flex-row justify-between px-16">
       <div className=" flex flex-col text-center pt-8 w-[350px] h-[200px] rounded-md shadow-md ">

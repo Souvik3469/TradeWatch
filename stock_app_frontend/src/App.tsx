@@ -19,9 +19,9 @@ const App: React.FC = () => {
 
   return (
     <div className="mt-16 ml-16">
+      {/* <Full /> */}
       {/* Price section */}
       <Price />
-
       {/* Tabs */}
       <section>
         <div className="grid grid-cols-12">
@@ -42,7 +42,6 @@ const App: React.FC = () => {
         </div>
         <hr className="border-t-2 border-gray-200 mt-6" />
       </section>
-
       {/* Tabs */}
       <section className="mt-12">{tabs[selectedTab].component}</section>
       {/* {tabs[selectedTab].component} */}

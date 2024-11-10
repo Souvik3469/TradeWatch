@@ -23,11 +23,7 @@ const fetchStockData = async (timeframe: string) => {
   });
 
 
-//   return response.data.map((res: any) => ({
-//     time: res[0] / 1000, // Convert timestamp to seconds
-//     value: parseFloat(res[4]), // Closing price (index 4)
-//   }));
-// };
+
 return response.data.map((res: any) => ({
     time: res[0] / 1000, // Convert timestamp to seconds
     open: parseFloat(res[1]), // Open price
