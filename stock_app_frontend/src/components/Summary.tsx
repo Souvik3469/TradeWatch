@@ -37,27 +37,25 @@ const Summary: React.FC = () => {
   return (
     <div className="flex flex-row justify-between px-16">
       <div className=" flex flex-col text-center pt-8 w-[350px] h-[200px] rounded-md shadow-md ">
-        <div className="text-3xl text-gray-400 font-semibold">
-          Current Price
-        </div>
-        <div className="text-3xl text-gray-600 mt-6 font-semibold">
+        <div className="text-lg text-gray-500 font-normal">Current Price</div>
+        <div className="text-4xl text-gray-600 mt-6 font-semibold">
           {formatPrice(currentPrice)}
         </div>
       </div>
       <div className=" flex flex-col text-center pt-8 w-[350px] h-[200px] rounded-md shadow-md relative ">
         <div className="flex flex-col justify-center  h-[32px] w-[32px] rounded-full bg-[#4B40EE]  text-gray-50 absolute top-1 right-1 font-semibold">
-          1y
+          5y
         </div>
-        <div className="text-3xl text-gray-400 font-semibold">Change</div>
+        <div className="text-lg text-gray-500 font-normal">Change</div>
         <div className="text-3xl text-gray-600 mt-6 font-semibold">
           {priceChange.toFixed(2)}%
         </div>
       </div>
       <div className=" flex flex-col text-center pt-8 w-[350px] h-[200px] rounded-md shadow-md relative">
         <div className="flex flex-col justify-center  h-[32px] w-[32px] rounded-full bg-[#4B40EE]  text-gray-50 absolute top-1 right-1 font-semibold ">
-          1y
+          5y
         </div>
-        <div className="text-3xl text-gray-400 font-semibold">High/Low</div>
+        <div className="text-lg text-gray-500 font-normal">High/Low</div>
         <div className="text-3xl text-gray-600 mt-6 font-semibold">
           {formatPrice(price24hHigh)} / {formatPrice(price24hLow)}
         </div>
