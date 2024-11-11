@@ -1,19 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { useStockData } from "../hooks/useStockData";
 import Loader from "../components/Loader";
+
 const Price: React.FC = () => {
   const [price, setPrice] = useState<number>(63179.71);
-  // const [percentageChange, setPercentageChange] = useState<number>(3.54);
+  const [percentageChange, setPercentageChange] = useState<number>(3.54);
 
-  const { data: stockData = [], isLoading } = useStockData("1w");
+  const { data: stockData = [], isLoading } = useStockData("1d");
 
   useEffect(() => {
-    if (stockData.length > 0) {
+    if (stockData.length > 1) {
       const latestPrice = stockData[stockData.length - 1].close;
-      // const firstPrice = stockData[0].close;
+      const previousPrice = stockData[stockData.length - 2].close;
 
       setPrice(latestPrice);
-      // setPercentageChange(((latestPrice - firstPrice) / firstPrice) * 100);
+      const dailyChange = ((latestPrice - previousPrice) / previousPrice) * 100;
+      setPercentageChange(dailyChange);
     }
   }, [stockData]);
 
@@ -35,24 +37,23 @@ const Price: React.FC = () => {
             </div>
           ) : (
             <div>
-              <div className="flex flex-row relative">
-                <div className=" text-70px font-normal leading-88px text-left text-[#1A243A] ">
+              <div className="flex items-start space-x-2">
+                <div className="text-70px font-normal leading-88px text-left text-[#1A243A]">
                   {formatPrice(price)}
                 </div>
-                <div className="absolute top-3 left-[310px]  text-24px font-normal text-[#BDBEBF]">
+                <div className="text-24px font-normal text-[#BDBEBF] mt-3">
                   USD
                 </div>
               </div>
-              {/* <div
-            className={`text-lg text-[${
-              percentageChange > 0 ? "#67BF6B" : "#E94B3C"
-            }] text-[18px] leading-[22.77px]`}
-          >
-            
-            {percentageChange.toFixed(2)}%
-          </div> */}
-              <div className="text-lg text-[#67BF6B] text-[18px] leading-[22.77px]">
-                + 2,161.42 (3.54%)
+
+              <div
+                className={`text-lg ${
+                  percentageChange > 0 ? "text-[#67BF6B]" : "text-[#E94B3C]"
+                } text-[18px] leading-[22.77px]`}
+              >
+                {percentageChange >= 0 ? "+" : "-"}
+                {formatPrice(price - stockData[stockData.length - 2]?.close)} (
+                {percentageChange.toFixed(2)}%)
               </div>
             </div>
           )}

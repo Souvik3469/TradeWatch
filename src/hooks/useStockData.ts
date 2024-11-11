@@ -42,6 +42,6 @@ export const useStockData = (timeframe: string) => {
   return useQuery({
     queryKey: ["stockData", timeframe],
     queryFn: () => fetchStockData(timeframe),
-    refetchInterval:3* 1000, 
+    refetchInterval:1* 1000, 
   });
 };

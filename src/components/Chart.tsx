@@ -20,10 +20,6 @@ const Chart: React.FC = () => {
     low: number;
     close: number;
     volume: number;
-    quoteVolume: number;
-    numTrades: number;
-    takerBuyBaseVolume: number;
-    takerBuyQuoteVolume: number;
   }
 
   const resizeChart = useCallback(() => {
@@ -58,13 +54,36 @@ const Chart: React.FC = () => {
         lineWidth: 2,
       });
 
+      const volumeSeries = chartRef.current.addHistogramSeries({
+        color: "#4B40EE",
+        priceFormat: { type: "volume" },
+      });
+
+      volumeSeries.applyOptions({
+        priceScaleId: "",
+      });
+
+      chartRef.current.priceScale("").applyOptions({
+        scaleMargins: {
+          top: 0.8,
+          bottom: 0,
+        },
+      });
+
       if (stockData.length > 0) {
         const mappedData = stockData.map((dataPoint: StockDataPoint) => ({
           time: dataPoint.time,
           value: dataPoint.close,
         }));
+        const volumeData = stockData.map((dataPoint: StockDataPoint) => ({
+          time: dataPoint.time,
+          value: dataPoint.volume,
+          color: dataPoint.close > dataPoint.open ? "#a9f7af" : "#fcb8b0",
+          // color: "#E6E8EB",
+        }));
 
         areaSeries.setData(mappedData);
+        volumeSeries.setData(volumeData);
       }
     }
 
@@ -140,12 +159,6 @@ const Chart: React.FC = () => {
           style={{ minHeight: "400px" }}
         ></div>
       </FullScreen>
-
-      {/* {isFetching && (
-        <div className="text-right text-gray-400 text-xs">
-          Refreshing data...
-        </div>
-      )} */}
     </div>
   );
 };
