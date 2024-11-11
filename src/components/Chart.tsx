@@ -78,8 +78,8 @@ const Chart: React.FC = () => {
         const volumeData = stockData.map((dataPoint: StockDataPoint) => ({
           time: dataPoint.time,
           value: dataPoint.volume,
-          color: dataPoint.close > dataPoint.open ? "#a9f7af" : "#fcb8b0",
-          // color: "#E6E8EB",
+          // color: dataPoint.close > dataPoint.open ? "#a9f7af" : "#fcb8b0",
+          color: "#E6E8EB",
         }));
 
         areaSeries.setData(mappedData);
