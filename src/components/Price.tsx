@@ -51,7 +51,7 @@ const Price: React.FC = () => {
                   percentageChange > 0 ? "text-[#67BF6B]" : "text-[#E94B3C]"
                 } text-[18px] leading-[22.77px]`}
               >
-                {percentageChange >= 0 ? "+" : "-"}
+                {percentageChange >= 0 ? "+" : ""}
                 {formatPrice(price - stockData[stockData.length - 2]?.close)} (
                 {percentageChange.toFixed(2)}%)
               </div>
