@@ -23,10 +23,10 @@ https://trade-watch.vercel.app/
 - Realtime data regarding Stock's current price and day high/low. (High/low are shown for a 5 year period due to API response).
 
 ### Chart: 
-![Chart](https://github.com/Souvik3469/TradeWatch/blob/main/public/Chart2.png)
+![Chart](https://github.com/Souvik3469/TradeWatch/blob/main/public/Chart1.png)
 - Realtime chart updates which can be filtered as per the timeframe.
   
-![FullScreen](https://github.com/Souvik3469/TradeWatch/blob/main/public/Chart_fullscreen2.png)
+![FullScreen](https://github.com/Souvik3469/TradeWatch/blob/main/public/Chart_fullscreen1.png)
 - Chart can also be viewed in full screen.
 
 ### Statistics: 
